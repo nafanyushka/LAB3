@@ -12,34 +12,40 @@
 #include "item.h"
 
 int main() {
-//    setlocale(LC_ALL, "Rus");
     SetConsoleOutputCP(CP_UTF8);
-    int maxsize1, maxsize2, choose = 0;
-//    Item* a = createItem();
-//    printInfo(a);
-    KeySpace1* keySpace1 = makeKeySpace1(&maxsize1);
+
+    int choose;
+    Table* table = createTable();
+
     do{
-        printf("Введите 1, чтобы добавить элемент в таблицу.\nВведите 2, чтобы вывести содержимое.\nВведите 3, чтобы"
-               " удалить элемент(ы).\nИначе программа закончит выполнение. Ваш выбор:\t");
+        printf("\nВведите 1, чтобы добавить элемент в таблицу.\nВведите 2, чтобы вывести содержимое.\nВведите 3, чтобы"
+               " удалить элемент(ы).\nВведите 4, чтобы вывести всю таблицу.\n"
+               "Иначе программа закончит выполнение. Ваш выбор:\t");
         choose = getInt();
+        printf("\n");
         KeySpace1* newKeySpace1 = NULL;
         int maxHelpSize;
         switch(choose){
             case 1:
-                addKeySpace1(keySpace1, maxsize1);
+                addTable(table);
                 break;
             case 2:
-                newKeySpace1 = getAllKeys(keySpace1, maxsize1);
-                if(newKeySpace1 != NULL){
-                    free(newKeySpace1);
-                }break;
+                findByKey1(table);
+                break;
             case 3:
-                freeByKey1(keySpace1, maxsize1);
+                deleteByKeys(table);
+                break;
+            case 4:
+                printTable(table);
                 break;
             default:
                 choose = 0;
+                break;
         }
     }while(choose != 0);
+    system("cls");
+    freeTable(table);
+    sleep(3);
     system("cls");
     printf("Выход.");
     sleep(1);

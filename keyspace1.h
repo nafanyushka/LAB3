@@ -38,5 +38,7 @@ KeySpace1* getAllKeys(KeySpace1*, int);
 void freeByKey1(KeySpace1*, int);
 void freeKeySpace1(KeySpace1*, int);
 void freeNode(Node1*);
+void printNode(Node1*);
+void printKeySpace1(KeySpace1*, int);
 
 #endif //LAB3_KEYSPACE1_H

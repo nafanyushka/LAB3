@@ -5,6 +5,8 @@
 #ifndef LAB3_TABLE_H
 #define LAB3_TABLE_H
 
+#include "keyspace1.h"
+
 typedef struct Table Table;
 typedef struct KeySpace1 KeySpace1;
 typedef struct KeySpace2 KeySpace2;
@@ -28,4 +30,10 @@ struct Table{
  */
 };
 
+Table* createTable();
+void addTable(Table*);
+void findByKey1(Table*);
+void deleteByKeys(Table*);
+void printTable(Table*);
+void freeTable(Table*);
 #endif //LAB3_TABLE_H

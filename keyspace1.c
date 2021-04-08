@@ -55,7 +55,7 @@ KeySpace1* getAllKeys(KeySpace1* keySpace1, int maxsize){
         return NULL;
     }
     if(keySpace1[index].key != key){
-        printf("Введенный ключ не найден.\n");
+        printf("Введенный ключ не найден. В данной ячейке лежат объекты с ключом %d.\n", keySpace1[index].key);
         return NULL;
     }
     Node1* list = keySpace1[index].node;
@@ -70,7 +70,7 @@ KeySpace1* getAllKeys(KeySpace1* keySpace1, int maxsize){
         newKeySpace1[newIndexSize].node->next = NULL;
         list = list->next;
     }
-    printf("Найдено %d элемент(ов), введите номер версии, которая вам необходима, либо 0, чтобы вывести все: ",
+    printf("Найдено %d элемент/а/ов, введите номер версии, которая вам необходима, либо 0, чтобы вывести все: ",
            newMaxSize);
     int newIndex;
     do {
@@ -113,8 +113,13 @@ void freeByKey1(KeySpace1* keySpace1, int maxsize1){
         do{
             releaseForDelete = getInt();
         }while(!(1 <= releaseForDelete && releaseForDelete <= amountItems));
-
         Node1* nodeForDelete = keySpace1[index].node, * helperForDelete = keySpace1[index].node;
+        if(releaseForDelete == amountItems){
+            keySpace1[index].node = keySpace1[index].node->next;
+            freeItem(nodeForDelete->item);
+            free(nodeForDelete);
+            return;
+        }
         while(nodeForDelete->release != releaseForDelete){
             helperForDelete = nodeForDelete;
             helperForDelete->release--;
@@ -144,6 +149,7 @@ void freeKeySpace1(KeySpace1* keySpace1, int maxsize1){
         }
     }
     free(keySpace1);
+    printf("Удаление первого пространства ключей прошло успешно!\n");
 }
 
 void freeNode(Node1* node){
@@ -153,5 +159,26 @@ void freeNode(Node1* node){
         helper = helper->next;
         freeItem(node->item);
         free(node);
+    }
+}
+
+void printNode(Node1* node1){
+    Node1* nodePrint = node1;
+    while(nodePrint != NULL){
+        printf("\tИнформация: \"%s\" (вер. %d)", nodePrint->item->info, nodePrint->release);
+        nodePrint = nodePrint->next;
+    }
+    printf(".\n");
+}
+
+void printKeySpace1(KeySpace1* keySpace1, int maxsize1){
+    KeySpace1* keySpacePrint1 = keySpace1;
+    for(int i = 0; i < maxsize1; i++, keySpacePrint1++){
+        if(keySpacePrint1->key == 0 || keySpacePrint1->node == NULL)
+            printf("%d.\n", i + 1);
+        else {
+            printf("%d.\tКлюч %d.", i + 1, keySpacePrint1->key);
+            printNode(keySpacePrint1->node);
+        }
     }
 }
