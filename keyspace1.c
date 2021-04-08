@@ -60,13 +60,14 @@ KeySpace1* getAllKeys(KeySpace1* keySpace1, int maxsize){
     }
     Node1* list = keySpace1[index].node;
     int newMaxSize = list->release;
-    KeySpace1* newKeySpace1 = (KeySpace1*)malloc(sizeof(KeySpace1) * newMaxSize);
+    KeySpace1* newKeySpace1 = (KeySpace1*)calloc(sizeof(KeySpace1), newMaxSize);
     int newIndexSize = newMaxSize;
     while(list != NULL){
         newIndexSize--;
         newKeySpace1[newIndexSize].key = newIndexSize;
         newKeySpace1[newIndexSize].node = (Node1*)malloc(sizeof(Node1));
         newKeySpace1[newIndexSize].node->item = list->item;
+        newKeySpace1[newIndexSize].node->next = NULL;
         list = list->next;
     }
     printf("Найдено %d элемент(ов), введите номер версии, которая вам необходима, либо 0, чтобы вывести все: ",
@@ -86,4 +87,71 @@ KeySpace1* getAllKeys(KeySpace1* keySpace1, int maxsize){
         printInfo(newKeySpace1[newIndex - 1].node->item);
     }
     return newKeySpace1;
+}
+
+void freeByKey1(KeySpace1* keySpace1, int maxsize1){
+    printf("Введите ключ: ");
+    int key = getInt();
+    int index = hashFunc(key, maxsize1);
+    if(keySpace1[index].node == NULL){
+        printf("Тут уже пусто!\n");
+        return;
+    }
+    if(keySpace1[index].key != key){
+        printf("Введенный ключ не найден.\n");
+        return;
+    }
+    int amountItems = keySpace1[index].node->release;
+    int choose;
+    printf("Удалить все элементы или только один? Введите 1 если только один элемент, 0 если все: ");
+    do{
+        choose = getInt();
+    }while(!(0 <= choose && choose  <= 1));
+    if(choose == 1){
+        int releaseForDelete;
+        printf("Какую верисю удалить?\n");
+        do{
+            releaseForDelete = getInt();
+        }while(!(1 <= releaseForDelete && releaseForDelete <= amountItems));
+
+        Node1* nodeForDelete = keySpace1[index].node, * helperForDelete = keySpace1[index].node;
+        while(nodeForDelete->release != releaseForDelete){
+            helperForDelete = nodeForDelete;
+            helperForDelete->release--;
+            nodeForDelete = nodeForDelete->next;
+        }
+
+        helperForDelete->next = nodeForDelete->next;
+        freeItem(nodeForDelete->item);
+        free(nodeForDelete);
+    }
+    else{
+        Node1* nodeForDelete, * helperForDelete = keySpace1[index].node;
+        keySpace1[index].node = NULL;
+        while(helperForDelete != NULL){
+            nodeForDelete = helperForDelete;
+            helperForDelete = helperForDelete->next;
+            freeItem(nodeForDelete->item);
+            free(nodeForDelete);
+        }
+    }
+}
+
+void freeKeySpace1(KeySpace1* keySpace1, int maxsize1){
+    for(int i = 0; i < maxsize1; i++){
+        if(keySpace1[i].node != NULL){
+            freeNode(keySpace1[i].node);
+        }
+    }
+    free(keySpace1);
+}
+
+void freeNode(Node1* node){
+    Node1 *helper = node;
+    while(helper != NULL){
+        node = helper;
+        helper = helper->next;
+        freeItem(node->item);
+        free(node);
+    }
 }

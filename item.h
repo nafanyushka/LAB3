@@ -17,5 +17,6 @@ struct Item{
 
 Item* createItem();
 void printInfo(Item*);
+void freeItem(Item*);
 
 #endif //LAB3_ITEM_H

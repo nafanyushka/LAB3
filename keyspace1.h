@@ -35,5 +35,8 @@ KeySpace1* makeKeySpace1(int*);
 int hashFunc(int, int);
 void addKeySpace1(KeySpace1*, int);
 KeySpace1* getAllKeys(KeySpace1*, int);
+void freeByKey1(KeySpace1*, int);
+void freeKeySpace1(KeySpace1*, int);
+void freeNode(Node1*);
 
 #endif //LAB3_KEYSPACE1_H

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <windows.h>
+#include <unistd.h>
 
 #include "input.h"
 #include "table.h"
@@ -13,23 +14,41 @@
 int main() {
 //    setlocale(LC_ALL, "Rus");
     SetConsoleOutputCP(CP_UTF8);
-    int maxsize1, maxsize2, choose;
+    int maxsize1, maxsize2, choose = 0;
 //    Item* a = createItem();
 //    printInfo(a);
     KeySpace1* keySpace1 = makeKeySpace1(&maxsize1);
     do{
-        addKeySpace1(keySpace1, maxsize1);
-        printf("Чтобы добавить элемент в 1 пространство ключей, введите любое число, кроме 0 (выйти - 0): ");
+        printf("Введите 1, чтобы добавить элемент в таблицу.\nВведите 2, чтобы вывести содержимое.\nВведите 3, чтобы"
+               " удалить элемент(ы).\nИначе программа закончит выполнение. Ваш выбор:\t");
         choose = getInt();
+        KeySpace1* newKeySpace1 = NULL;
+        int maxHelpSize;
+        switch(choose){
+            case 1:
+                addKeySpace1(keySpace1, maxsize1);
+                break;
+            case 2:
+                newKeySpace1 = getAllKeys(keySpace1, maxsize1);
+                if(newKeySpace1 != NULL){
+                    free(newKeySpace1);
+                }break;
+            case 3:
+                freeByKey1(keySpace1, maxsize1);
+                break;
+            default:
+                choose = 0;
+        }
     }while(choose != 0);
-    printf("\nВывод таблицы.\n\n");
-    do{
-        KeySpace1* newKeySpace1 = getAllKeys(keySpace1, maxsize1);
-        printf("Чтобы вывести элементы из 1 пространство ключей, введите любое число, кроме 0 (выйти - 0): ");
-        choose = getInt();
-    }while(choose != 0);
-
-    system("pause");
+    system("cls");
+    printf("Выход.");
+    sleep(1);
+    system("cls");
+    printf("Выход..");
+    sleep(1);
+    system("cls");
+    printf("Выход...");
+    sleep(1);
     return 0;
 }
 

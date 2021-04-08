@@ -19,3 +19,8 @@ void printInfo(Item* a){
     SetConsoleOutputCP(CP_UTF8);
     printf("\tИнформация: %s\n", a->info);
 }
+
+void freeItem(Item* item){
+    free(item->info);
+    free(item);
+}
