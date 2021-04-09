@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <locale.h>
 #include <windows.h>
 #include <unistd.h>
 
@@ -18,8 +16,14 @@ int main() {
     Table* table = createTable();
 
     do{
-        printf("\nВведите 1, чтобы добавить элемент в таблицу.\nВведите 2, чтобы вывести содержимое.\nВведите 3, чтобы"
-               " удалить элемент(ы).\nВведите 4, чтобы вывести всю таблицу.\n"
+        printf("\n"
+               "Введите 1, чтобы добавить элемент в таблицу.\n"
+               "Введите 2, чтобы получить определенную версию предмета из первого пространства ключей.\n"
+               "Введите 3, чтобы вывести всю таблицу в стиле первого пространства.\n"
+               "Введите 4, чтобы вывести таблицу в стиле второго пространства ключей.\n"
+               "Введите 5, чтобы удалить все элементы с одним ключом первого пространства.\n"
+               "Введите 6, чтобы удалить элемент по второму ключу.\n"
+               "Введите 7, чтобы удалить заданный составным ключом элемент.\n"
                "Иначе программа закончит выполнение. Ваш выбор:\t");
         choose = getInt();
         printf("\n");
@@ -27,16 +31,25 @@ int main() {
         int maxHelpSize;
         switch(choose){
             case 1:
-                addTable(table);
+                addTableComplex(table, table->keySpace1, table->keySpace2);
                 break;
             case 2:
                 findByKey1(table);
                 break;
             case 3:
-                deleteByKeys(table);
+                printTable(table);
                 break;
             case 4:
-                printTable(table);
+                printByKeySpace2(table);
+                break;
+            case 5:
+                deleteByKey1(table);
+                break;
+            case 6:
+                deleteByKey2(table);
+                break;
+            case 7:
+                deleteByKeys(table);
                 break;
             default:
                 choose = 0;

@@ -24,3 +24,12 @@ void freeItem(Item* item){
     free(item->info);
     free(item);
 }
+
+Item* copyItem(Item* item){
+    Item* newItem = (Item*)malloc(sizeof(Item));
+    newItem->info = item->info;
+    newItem->key1 = item->key1;
+    newItem->key2 = item->key2;
+    newItem->node1 = item->node1;
+    return newItem;
+}

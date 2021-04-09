@@ -3,6 +3,7 @@
 //
 
 #include "keyspace1.h"
+#include "keyspace2.h"
 #include "item.h"
 #include "input.h"
 
@@ -18,32 +19,72 @@ int hashFunc(int key, int maxsize){
     return key%maxsize;
 }
 
-void addKeySpace1(KeySpace1* keySpace1, int maxsize){
+Item* addKeySpace1(KeySpace1* keySpace1, int maxsize){
     printf("Введите ключ для первого пространства (целое число, не равное нулю): ");
     int key;
     do{
         key = getInt();
     }while(key == 0);
     int index = hashFunc(key, maxsize);
-    if(keySpace1[index].node != NULL && keySpace1[index].key != key){
+    KeySpace1* keySpace = keySpace1 + index;
+    if(keySpace->node != NULL && keySpace->key != key){
         printf("Отказано в доступе: данный индекс уже занят другим ключом.\n");
-        return;
+        return NULL;
     }
-    keySpace1[index].key = key;
-    if(keySpace1[index].node == NULL){
-        keySpace1[index].node = (Node1*)malloc(sizeof(Node1));
-        Node1* node = keySpace1[index].node;
+    keySpace->key = key;
+    if(keySpace->node == NULL){
+        keySpace->node = (Node1*)malloc(sizeof(Node1));
+        Node1* node = keySpace->node;
         node->item = createItem();
         node->release = 1;
         node->next = NULL;
-        return;
+        node->item->key1 = keySpace;
+        node->item->node1 = node;
+        return node->item;
     }
     Node1* list = (Node1*)malloc(sizeof(Node1));
     list->item = createItem();
-    int release = keySpace1[index].node->release;
-    list->next = keySpace1[index].node;
+    list->item->key1 = keySpace;
+    int release = keySpace->node->release;
+    list->next = keySpace->node;
     list->release = release  + 1;
-    keySpace1[index].node = list;
+    keySpace->node = list;
+    list->item->node1 = list;
+    return list->item;
+}
+
+int addItemKeySpace1(Item* item1, KeySpace1* keySpace1, int maxsize) {
+    printf("Введите ключ для первого пространства (целое число, не равное нулю): ");
+    int key;
+    do{
+        key = getInt();
+    }while(key == 0);
+    int index = hashFunc(key, maxsize);
+    KeySpace1* keySpace = keySpace1 + index;
+    if(keySpace->node != NULL && keySpace->key != key){
+        printf("Отказано в доступе: данный индекс уже занят другим ключом.\n");
+        return -1;
+    }
+    keySpace->key = key;
+    if(keySpace->node == NULL){
+        keySpace->node = (Node1*)malloc(sizeof(Node1));
+        Node1* node = keySpace->node;
+        node->item = item1;
+        node->release = 1;
+        node->next = NULL;
+        node->item->key1 = keySpace;
+        node->item->node1 = node;
+        return 1;
+    }
+    Node1* list = (Node1*)malloc(sizeof(Node1));
+    list->item = item1;
+    list->item->key1 = keySpace;
+    int release = keySpace->node->release;
+    list->next = keySpace->node;
+    list->release = release  + 1;
+    keySpace->node = list;
+    list->item->node1 = list;
+    return 1;
 }
 
 KeySpace1* getAllKeys(KeySpace1* keySpace1, int maxsize){
@@ -165,7 +206,8 @@ void freeNode(Node1* node){
 void printNode(Node1* node1){
     Node1* nodePrint = node1;
     while(nodePrint != NULL){
-        printf("\tИнформация: \"%s\" (вер. %d)", nodePrint->item->info, nodePrint->release);
+        printf("\tИнформация: \"%s\" (вер. %d, ключ второго пространства: %s).",
+               nodePrint->item->info, nodePrint->release, nodePrint->item->key2->key);
         nodePrint = nodePrint->next;
     }
     printf(".\n");
@@ -177,8 +219,37 @@ void printKeySpace1(KeySpace1* keySpace1, int maxsize1){
         if(keySpacePrint1->key == 0 || keySpacePrint1->node == NULL)
             printf("%d.\n", i + 1);
         else {
-            printf("%d.\tКлюч %d.", i + 1, keySpacePrint1->key);
+            printf("%d.\tКлюч первого пространства: %d.", i + 1, keySpacePrint1->key);
             printNode(keySpacePrint1->node);
         }
     }
+}
+
+void deleteOneKeySpace1(Item* item){
+    KeySpace1* pointHelper = item->key1;
+    Node1* pointerNode = pointHelper->node;
+    if(pointerNode->item == item){
+        pointHelper->node = pointerNode->next;
+        free(item);
+        return;
+    }
+    while(pointerNode->next->item != item){
+        pointerNode->release--;
+        pointerNode = pointerNode->next;
+    }
+    pointerNode->next = pointerNode->next->next;
+    (pointerNode->release)--;
+    free(pointerNode->next);
+    free(item);
+}
+
+void deleteAllItems1(KeySpace1* keySpace1, KeySpace2* keySpace2, int key, int maxsize1, int maxsize2){
+    int index = hashFunc(key,maxsize1);
+    if(keySpace1[index].node == NULL){
+        printf("Такому ключу соответвтсвует уже пустая область.\n");
+        return;
+    }
+    KeySpace1* keyHelper1 = &keySpace1[index];
+    while(keyHelper1->node != NULL)
+        deleteByKey(keySpace2, keyHelper1->node->item->key2->key, maxsize2);
 }

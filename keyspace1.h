@@ -33,12 +33,15 @@ struct Node1{
 
 KeySpace1* makeKeySpace1(int*);
 int hashFunc(int, int);
-void addKeySpace1(KeySpace1*, int);
+Item* addKeySpace1(KeySpace1*, int);
+int addItemKeySpace1(Item* item, KeySpace1*, int);
 KeySpace1* getAllKeys(KeySpace1*, int);
 void freeByKey1(KeySpace1*, int);
 void freeKeySpace1(KeySpace1*, int);
 void freeNode(Node1*);
 void printNode(Node1*);
 void printKeySpace1(KeySpace1*, int);
+void deleteOneKeySpace1(Item*);
+void deleteAllItems1(KeySpace1*, KeySpace2*, int, int, int);
 
 #endif //LAB3_KEYSPACE1_H

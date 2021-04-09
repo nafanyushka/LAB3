@@ -21,7 +21,7 @@ char* get_String(){
     char buf[11];
     int n, size = 0;
     *a = '\0';
-    while ((getchar()) != '\n'); //Очистка входного буфера
+//    scanf("%*c"); //Очистка входного буфера
     do{
         n = scanf("%10[^\n]", buf);
         if(n < 0){
