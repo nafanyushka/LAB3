@@ -58,10 +58,8 @@ int main() {
     }while(choose != 0);
     system("cls");
     freeTable(table);
-    sleep(3);
-    system("cls");
     printf("Выход.");
-    sleep(1);
+    sleep(3);
     system("cls");
     printf("Выход..");
     sleep(1);
