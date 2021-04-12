@@ -11,14 +11,18 @@ Table* createTable(){
     Table* table = (Table*)calloc(sizeof(Table), 1);
     table->keySpace1 = makeKeySpace1(&table->maxsize1);
     table->keySpace2 = makeKeySpace2(&table->maxsize2);
+    table->nsize1 = 0;
     return table;
 }
 
 void findByKey1(Table* table){
-    KeySpace1* newKeySpace1 = getAllKeys(table->keySpace1, table->maxsize1);
+    Table* newTable = (Table*)malloc(sizeof(Table));
+    KeySpace1* newKeySpace1 = getAllKeys(table->keySpace1, table->maxsize1, table->nsize1);
     if(newKeySpace1 != NULL){
         free(newKeySpace1);
+        return;
     }
+    newTable->keySpace1 = newKeySpace1;
 }
 
 void deleteByKeys(Table* table){
@@ -31,15 +35,14 @@ void deleteByKeys(Table* table){
     }while(strlen(key2) > 4 || *key2 == '\0');
     Item* item = findByKey_2(table, key2);
     if(item->key1->key == key1)
-        deleteByKey(table->keySpace2, key2, table->maxsize2);
+        deleteByKey(table->keySpace2, table->keySpace1, key2, table->maxsize2, &table->nsize1);
     else
         printf("Не найдено элемента с таким составным ключом!\n");
     free(item); //Обычная очистка, так как это скопированный элемент и в нем ссылка на ту же инфу что и в оригинале.
 }
 
 void deleteByKey1(Table* table){
-    printf("Введите ключ первого пространства ключей: ");
-    deleteAllItems1(table->keySpace1, table->keySpace2, getInt(), table->maxsize1, table->maxsize2);
+    freeByKey1(table->keySpace1, table->keySpace2, table->maxsize1, table->maxsize2, &table->nsize1);
 }
 
 void deleteByKey2(Table* table){
@@ -48,11 +51,11 @@ void deleteByKey2(Table* table){
         printf("Введите второй ключ: ");
         key2 = get_String();
     }while(strlen(key2) > 4 || *key2 == '\0');
-    deleteByKey(table->keySpace2, key2, table->maxsize2);
+    deleteByKey(table->keySpace2, table->keySpace1, key2, table->maxsize2, &table->nsize1);
 }
 
 void printTable(Table* table){
-    printKeySpace1(table->keySpace1, table->maxsize1);
+    printKeySpace1(table->keySpace1, table->nsize1);
 }
 
 void printByKeySpace2(Table* table){
@@ -60,11 +63,11 @@ void printByKeySpace2(Table* table){
 }
 
 void addTable(Table* table){
-    addKeySpace1(table->keySpace1, table->maxsize1);
+    addKeySpace1(table->keySpace1, table->maxsize1, &table->nsize1);
 }
 
 void freeTable(Table* table){
-    freeKeySpace1(table->keySpace1, table->maxsize1);
+    freeKeySpace1(table->keySpace1, table->nsize1);
     free(table->keySpace2);
     free(table);
     printf("Таблица успешно очищена!\n");
@@ -74,7 +77,7 @@ void addTableComplex(Table* table, KeySpace1* keySpace1, KeySpace2* keySpace2){
     Item* item = addNewKeySpace2(keySpace2, table->maxsize2);
     if(item == NULL)
         return;
-    if(addItemKeySpace1(item, keySpace1, table->maxsize1) == -1){
+    if(addItemKeySpace1(item, keySpace1, table->maxsize1, &table->nsize1) == -1){
         printf("Ошибка!\n");
         item->key2->busy = DELETED;
         free(item);

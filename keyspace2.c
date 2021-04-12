@@ -28,11 +28,12 @@ int hash1(char* key){
 }
 int hash2(char* key){
     int keyInt = 0;
+    int steps[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     char* helpKey = key;
     while(*helpKey != '\0'){
         keyInt += (int)*helpKey++;
     }
-    return keyInt * (keyInt + 1);
+    return steps[keyInt%10];
 }
 int getIndex(char* key, int step, int maxsize2){
     return (hash1(key) + step * hash2(key))%maxsize2;
@@ -109,20 +110,21 @@ Item* findByKey2(KeySpace2* keySpace2, char* key, int maxsize2){
     return NULL;
 }
 
-void deleteByKey(KeySpace2* keySpace2, char* key, int maxsize2){
+void deleteByKey(KeySpace2* keySpace2, KeySpace1* keySpace1, char* key, int maxsize2, int* nsize1){
     for(int step = 0; step < maxsize2; step++){
         int index = getIndex(key, step, maxsize2);
         KeySpace2* pointerHelp = &keySpace2[index];
         if(pointerHelp->busy == BUSY && strcmp(pointerHelp->key, key) == 0) {
             pointerHelp->busy = DELETED;
             Item* item = pointerHelp->info;
-            deleteOneKeySpace1(item);
+            deleteOneKeySpace1(item, keySpace1, nsize1);
         }
     }
 }
 
 void printKeySpace2(KeySpace2* keySpace2, int maxsize2){
     KeySpace2* pointerHelp = keySpace2;
+    printf("\n\n/////////////////////// ТАБЛИЦА. ПРОСТРАНСТВО КЛЮЧЕЙ 2. ///////////////////////\n");
     for(int i = 0; i < maxsize2; i++, pointerHelp++){
         if(pointerHelp->busy == BUSY) {
             printf("%d. Информация: \"%s\". Ключ в первом пространстве: %d (вер. %d). Ключ во втором пространстве: %s."
@@ -133,4 +135,5 @@ void printKeySpace2(KeySpace2* keySpace2, int maxsize2){
             printf("%d.\n", i + 1);
         }
     }
+    printf("\n\n");
 }
