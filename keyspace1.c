@@ -182,6 +182,45 @@ KeySpace1* getAllKeys(KeySpace1* keySpace1, int maxsize, int nsize1){
     return NULL;
 }
 
+KeySpace1* getAllKeys_1(KeySpace1* keySpace1, int key, int nsize1, Node1* new_Node, Node1** node, int* releases){
+    KeySpace1* newKeySpace1 = (KeySpace1*)malloc(sizeof(KeySpace1));
+    KeySpace1* keySpacePointer = keySpace1;
+    for(int i = 0; i < nsize1; i++){
+
+        /* //////////////////// НОВАЯ КЕЙСПЕЙСКА 1 /////////////////////// */
+
+        if(keySpacePointer->key == key){
+            Node1* copier = keySpacePointer->node;
+            Node1* newNode = (Node1*)malloc(sizeof(Node1));
+            Node1* paster = newNode;
+            while(copier != NULL){
+                paster->next = (Node1*)malloc(sizeof(Node1));
+                paster = paster->next;
+                paster->release = copier->release;
+                paster->item = copyItemInfo(copier->item);
+                paster->item->key1 = newKeySpace1;
+                paster->item->node1 = paster;
+                copier = copier->next;
+            }
+            paster->next = NULL;
+            Node1* helper = newNode;
+            newNode = newNode->next;
+            helper->next = NULL;
+            newKeySpace1->node = newNode;
+            free(helper);
+            (*releases) = newNode->release;
+            new_Node = newNode;
+            *node = keySpacePointer->node;
+            newKeySpace1->key = key;
+            return newKeySpace1;
+        }
+        keySpacePointer++;
+    }
+//    TODO: Добавить оповещение что не удалось найти такой ключ.
+
+    return NULL;
+}
+
 void freeByKey1(KeySpace1* keySpace1, KeySpace2* keySpace2, int maxsize1, int maxsize2, int* nsize1){
     printf("Введите ключ для первого пространства: ");
     KeySpace1* keyPointer = keySpace1;
@@ -232,10 +271,10 @@ void freeByKey1(KeySpace1* keySpace1, KeySpace2* keySpace2, int maxsize1, int ma
         deleteAllItems1(keySpace1, keySpace2, key, maxsize1, maxsize2, nsize1);
         return;
     }
-    else{
-        deleteAllItems1(keySpace1, keySpace2, key, maxsize1, maxsize2, nsize1);
+//    else{
+//        deleteAllItems1(keySpace1, keySpace2, key, maxsize1, maxsize2, nsize1);
 //        return;
-        }
+//        }
 }
 
 void freeKeySpace1(KeySpace1* keySpace1, int nsize){
@@ -336,5 +375,50 @@ void push(KeySpace1* keySpace1, int index, int nsize1){
     while(helperPoint != NULL){
         helperPoint->item->key1 = keyPointer;
         helperPoint = helperPoint->next;
+    }
+}
+
+void printOneOrAll(KeySpace1* keySpace1, int key, int nsize1, int choose) {
+
+    // ЕСЛИ choose = 0 то все элементы, если choose = 1, то один элемент на выбор
+
+    int release;
+    KeySpace1* indexGetter = keySpace1;
+    int index = -1;
+    for(int i = 0; i < nsize1; i++){
+        if(indexGetter->key == key){
+            index = i;
+            break;
+        }
+    }
+    if(index == -1)
+        return;
+    Node1* pointerHelper = keySpace1[index].node;
+    switch(choose){
+
+        case 0:
+            while(pointerHelper != NULL){
+                printf("Элемент с версией %d: ", pointerHelper->release);
+                printInfo(pointerHelper->item);
+                pointerHelper = pointerHelper->next;
+            }
+            break;
+
+        case 1:
+            printf("Введите версию, которую хотите вывести: ");
+            release = getInt();
+            while(pointerHelper != NULL){
+                if(pointerHelper->release == release){
+                    printf("Элемент с версией %d: ", pointerHelper->release);
+                    printInfo(pointerHelper->item);
+                    break;
+                }
+            pointerHelper = pointerHelper->next;
+            }
+            break;
+
+        default:
+            printf("Ну как хотите...\n");
+            break;
     }
 }

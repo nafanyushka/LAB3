@@ -21,6 +21,7 @@ struct KeySpace2{
 };
 
 KeySpace2* makeKeySpace2(int*);
+KeySpace2* copyKeySpace2(KeySpace2*, Node1*, Node1*, int);
 int hash1(char*);
 int hash2(char*);
 int getIndex(char*, int, int);

@@ -18,6 +18,23 @@ KeySpace2* makeKeySpace2(int* maxsize2){
     return keySpace2;
 }
 
+KeySpace2* copyKeySpace2(KeySpace2* keySpace2, Node1* node, Node1* newNode, int releases){
+    KeySpace2* newKeySpace2 = (KeySpace2*)malloc(releases * sizeof(KeySpace2));
+    KeySpace2* newPointer = newKeySpace2;
+    Node1* nodePointer = node;
+    Node1* nodeNewPointer = newNode;
+    while(nodePointer != NULL){
+        newPointer->info = nodeNewPointer->item;
+        newPointer->info->key2 = newPointer;
+        newPointer->busy = BUSY;
+        newPointer->key = nodePointer->item->key2->key;
+        newPointer++;
+        nodeNewPointer = nodeNewPointer->next;
+        nodePointer = nodePointer->next;
+    }
+    return newKeySpace2;
+}
+
 int hash1(char* key){
     int keyInt = 0;
     char* helpKey = key;

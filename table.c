@@ -91,3 +91,21 @@ Item* findByKey_2(Table* table, char* key){
     Item* newItem = copyItem(item);
     return newItem;
 }
+
+Table* findByKey_1(Table* table){
+    Table* newTable = (Table*)calloc(sizeof(Table), 1);
+    Node1* newNode = NULL;
+    Node1* oldNode = NULL;
+    printf("Введите ключ первого пространства: ");
+    int key = getInt();
+    newTable->maxsize1 = 1;
+    newTable->keySpace1 = getAllKeys_1(table->keySpace1, key, table->nsize1, newNode, &oldNode, &newTable->maxsize2);
+    if(newTable->keySpace1 == NULL) {
+        printf("Ошибка: введеный ключ не найден!\n");
+        return NULL;
+    }
+    newNode = newTable->keySpace1->node;
+    newTable->nsize1 = 1;
+    newTable->keySpace2 = copyKeySpace2(table->keySpace2, oldNode, newNode, newTable->maxsize2);
+    return newTable;
+}

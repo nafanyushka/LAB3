@@ -21,5 +21,6 @@ Item* createItem();
 void printInfo(Item*);
 void freeItem(Item*);
 Item* copyItem(Item*);
+Item* copyItemInfo(Item*);
 
 #endif //LAB3_ITEM_H

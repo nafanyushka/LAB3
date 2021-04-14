@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <windows.h>
 #include "item.h"
+#include "keyspace1.h"
+#include "keyspace2.h"
 #include "input.h"
 
 Item* createItem(){
@@ -17,7 +19,8 @@ Item* createItem(){
 
 void printInfo(Item* a){
     SetConsoleOutputCP(CP_UTF8);
-    printf("\tИнформация: %s\n", a->info);
+    printf("\tИнформация: %s.\tКлюч первого пространства: %d.\tКлюч второго пространства: %s.\n", a->info, a->key1->key,
+           a->key2->key);
 }
 
 void freeItem(Item* item){
@@ -31,5 +34,19 @@ Item* copyItem(Item* item){
     newItem->key1 = item->key1;
     newItem->key2 = item->key2;
     newItem->node1 = item->node1;
+    return newItem;
+}
+
+Item* copyItemInfo(Item* item){
+    Item* newItem = (Item*)calloc(sizeof(Item), 1);
+    newItem->info = (char*)malloc(sizeof(char*) * strlen(item->info));
+    char* paster = newItem->info;
+    char* copier = item->info;
+    while(*copier != '\0'){
+        (*paster) = (*copier);
+        paster++;
+        copier++;
+    }
+    *paster = '\0';
     return newItem;
 }
