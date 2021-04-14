@@ -6,6 +6,7 @@
 #define LAB3_DIALOGUE_H
 
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include "keyspace1.h"
 #include "keyspace2.h"
@@ -14,6 +15,6 @@
 #include "table.h"
 
 int dialogue(Table*);
-int miniDialogue(Table*);
+int miniDialogue(Table*, int);
 
 #endif //LAB3_DIALOGUE_H

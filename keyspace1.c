@@ -7,11 +7,8 @@
 #include "item.h"
 #include "input.h"
 
-KeySpace1* makeKeySpace1(int* maxsize) {
-    printf("Введите размер первого пространства ключей: ");
-    int maxsize1 = getInt();
-    KeySpace1* newKeySpace1 = (KeySpace1*)calloc(sizeof(KeySpace1), maxsize1);
-    *maxsize = maxsize1;
+KeySpace1* makeKeySpace1(int maxsize) {
+    KeySpace1* newKeySpace1 = (KeySpace1*)calloc(sizeof(KeySpace1), maxsize);
     return newKeySpace1;
 }
 
@@ -19,17 +16,12 @@ int hashFunc(int key, int maxsize){
     return key%maxsize;
 }
 
-Item* addKeySpace1(KeySpace1* keySpace1, int maxsize, int* nsize1){
+Item* addKeySpace1(KeySpace1* keySpace1, int maxsize, int* nsize1, int key, char* info){
     KeySpace1* keySpace = keySpace1;
-    int key;
-    do{
-        printf("Введите ключ для первого пространства (целое число, не равное нулю): ");
-        key = getInt();
-    }while(key == 0);
     for(int index = 0; index < *nsize1; index++, keySpace++){
         if(keySpace->key == key){
             Node1* list = (Node1*)malloc(sizeof(Node1));
-            list->item = createItem();
+            list->item = createItem(info);
             list->item->key1 = keySpace;
             int release = keySpace->node->release;
             list->next = keySpace->node;
@@ -48,7 +40,7 @@ Item* addKeySpace1(KeySpace1* keySpace1, int maxsize, int* nsize1){
 //    if(keySpace->node == NULL){
         keySpace->node = (Node1*)malloc(sizeof(Node1));
         Node1* node = keySpace->node;
-        node->item = createItem();
+        node->item = createItem(info);
         node->release = 1;
         node->next = NULL;
         node->item->key1 = keySpace;
@@ -68,7 +60,7 @@ Item* addKeySpace1(KeySpace1* keySpace1, int maxsize, int* nsize1){
 //    return list->item;
 }
 
-int addItemKeySpace1(Item* item1, KeySpace1* keySpace1, int maxsize, int* nsize1) {
+int addItemKeySpace1(Item* item1, KeySpace1* keySpace1, int maxsize, int* nsize1, int key) {
 //    printf("Введите ключ для первого пространства (целое число, не равное нулю): ");
 //    int key;
 //    do{
@@ -101,11 +93,6 @@ int addItemKeySpace1(Item* item1, KeySpace1* keySpace1, int maxsize, int* nsize1
 //    list->item->node1 = list;
 //    return 1;
     KeySpace1* keySpace = keySpace1;
-    int key;
-    do{
-        printf("Введите ключ для первого пространства (целое число, не равное нулю): ");
-        key = getInt();
-    }while(key == 0);
     for(int index = 0; index < *nsize1; index++, keySpace++){
         if(keySpace->key == key){
             Node1* list = (Node1*)malloc(sizeof(Node1));
@@ -221,10 +208,9 @@ KeySpace1* getAllKeys_1(KeySpace1* keySpace1, int key, int nsize1, Node1* new_No
     return NULL;
 }
 
-void freeByKey1(KeySpace1* keySpace1, KeySpace2* keySpace2, int maxsize1, int maxsize2, int* nsize1){
+void freeByKey1(KeySpace1* keySpace1, KeySpace2* keySpace2, int maxsize1, int maxsize2, int* nsize1, int key){
     printf("Введите ключ для первого пространства: ");
     KeySpace1* keyPointer = keySpace1;
-    int key = getInt();
     int index = 0;
     for(int i = 0; i < *nsize1; i++, keyPointer++){
         if(keyPointer->key == key){
@@ -267,14 +253,14 @@ void freeByKey1(KeySpace1* keySpace1, KeySpace2* keySpace2, int maxsize1, int ma
 //        freeItem(nodeForDelete->item);
 //        free(nodeForDelete);
     }
+    else{
+        deleteAllItems1(keySpace1, keySpace2, key, maxsize1, maxsize2, nsize1);
+        return;
+        }
     if(keySpace1[index].node == NULL){
         deleteAllItems1(keySpace1, keySpace2, key, maxsize1, maxsize2, nsize1);
         return;
     }
-//    else{
-//        deleteAllItems1(keySpace1, keySpace2, key, maxsize1, maxsize2, nsize1);
-//        return;
-//        }
 }
 
 void freeKeySpace1(KeySpace1* keySpace1, int nsize){

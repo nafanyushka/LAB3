@@ -9,7 +9,7 @@
 
 int getInt(){
     int a;
-    while(scanf("%d", &a) != 1 || a < 0) {
+    while(scanf("%d", &a) != 1) {
         printf("Попробуйте еще раз: ");
         while(getchar() != '\n');
     }

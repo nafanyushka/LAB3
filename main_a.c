@@ -5,9 +5,27 @@
 
 #include "dialogue.h"
 
+/* TODO:
+ *  Разделение на диалоговые и бекендовые.
+ *  Поиски добавить в диалоги.
+ *  Пофиксить удаление по ключам.
+ */
+
 int main() {
     SetConsoleOutputCP(CP_UTF8);
-    Table* table = createTable();
+    int maxSize1, maxSize2;
+
+    do{
+        printf("Введите размер 1 пространства ключей: ");
+        maxSize1 = getInt();
+    }while(maxSize1 <= 0);
+
+    do{
+        printf("Введите размер 2 пространства ключей: ");
+        maxSize2 = getInt();
+    }while(maxSize2 <= 0);
+
+    Table* table = createTable(maxSize1, maxSize2);
 
     int isGood = dialogue(table);
 

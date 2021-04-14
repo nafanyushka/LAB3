@@ -10,11 +10,8 @@
 #include "keyspace1.h"
 #include "input.h"
 
-KeySpace2* makeKeySpace2(int* maxsize2){
-    printf("Введите размер второго пространства ключей: ");
-    int maxSize2 = getInt();
-    KeySpace2* keySpace2 = (KeySpace2*)calloc(sizeof(KeySpace2), maxSize2);
-    *maxsize2 = maxSize2;
+KeySpace2* makeKeySpace2(int maxsize2){
+    KeySpace2* keySpace2 = (KeySpace2*)calloc(sizeof(KeySpace2), maxsize2);
     return keySpace2;
 }
 
@@ -55,14 +52,7 @@ int hash2(char* key){
 int getIndex(char* key, int step, int maxsize2){
     return (hash1(key) + step * hash2(key))%maxsize2;
 }
-Item* addNewKeySpace2(KeySpace2* keySpace2, int maxsize2){
-    char* key = NULL;
-
-    do{
-        printf("Введите ключ для второго пространства (не более 4 символов): ");
-        key = get_String();
-    }while(strlen(key) > MAXSTRING || *key == '\0');
-
+Item* addNewKeySpace2(KeySpace2* keySpace2, int maxsize2, char* key, char* info){
     for(int i = 0; i < maxsize2; i++){
         int index = getIndex(key, i, maxsize2);
         if(keySpace2[index].busy == BUSY){
@@ -74,7 +64,7 @@ Item* addNewKeySpace2(KeySpace2* keySpace2, int maxsize2){
         }
         else{
             KeySpace2* pointerKey = &keySpace2[index];
-            pointerKey->info = createItem();
+            pointerKey->info = createItem(info);
             pointerKey->info->key2 = pointerKey;
             pointerKey->key = key;
             pointerKey->busy = BUSY;
@@ -135,8 +125,12 @@ void deleteByKey(KeySpace2* keySpace2, KeySpace1* keySpace1, char* key, int maxs
             pointerHelp->busy = DELETED;
             Item* item = pointerHelp->info;
             deleteOneKeySpace1(item, keySpace1, nsize1);
+            return;
         }
+        if(pointerHelp->busy == FREE)
+            break;
     }
+    printf("Не удалось найти такой ключ.\n");
 }
 
 void printKeySpace2(KeySpace2* keySpace2, int maxsize2){

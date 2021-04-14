@@ -20,12 +20,12 @@ struct KeySpace2{
     Item* info;
 };
 
-KeySpace2* makeKeySpace2(int*);
+KeySpace2* makeKeySpace2(int);
 KeySpace2* copyKeySpace2(KeySpace2*, Node1*, Node1*, int);
 int hash1(char*);
 int hash2(char*);
 int getIndex(char*, int, int);
-Item* addNewKeySpace2(KeySpace2*, int);
+Item* addNewKeySpace2(KeySpace2*, int, char*, char*);
 void addItemKeySpace2(Item*, KeySpace2*, int);
 Item* findByKey2(KeySpace2*, char*, int);
 void deleteByKey(KeySpace2*, KeySpace1*, char*, int, int*);

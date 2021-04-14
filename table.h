@@ -34,17 +34,16 @@ struct Table{
  */
 };
 
-Table* createTable();
-void addTable(Table*);
-void addTableComplex(Table*, KeySpace1*, KeySpace2*);
+Table* createTable(int, int);
+int addTableComplex(Table*, KeySpace1*, KeySpace2*, int, char*, char*);
 void findByKey1(Table*);
-Table* findByKey_1(Table*);
-void deleteByKeys(Table*);
-void deleteByKey1(Table*);
-void deleteByKey2(Table*);
+Table* findByKey_1(Table*, int);
+void deleteByKeys(Table*, int, char*);
+void deleteByKey1(Table*, int);
+void deleteByKey2(Table*, char*);
 void printTable(Table*);
 void freeTable(Table*);
-Item* findByKey_2(Table*, char*);
+Item* findByKey_2(Table*, char*, int);
 void printByKeySpace2(Table*);
 /* TODO:
  *  Сделать вывод первой штуковины через findByKey_1

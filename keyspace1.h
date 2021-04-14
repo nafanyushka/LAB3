@@ -31,13 +31,13 @@ struct Node1{
 */
 };
 
-KeySpace1* makeKeySpace1(int*);
+KeySpace1* makeKeySpace1(int);
 int hashFunc(int, int);
-Item* addKeySpace1(KeySpace1*, int, int*);
-int addItemKeySpace1(Item* item, KeySpace1*, int, int*);
+Item* addKeySpace1(KeySpace1*, int, int*, int, char*);
+int addItemKeySpace1(Item* item, KeySpace1*, int, int*, int);
 KeySpace1* getAllKeys(KeySpace1*, int, int);
 KeySpace1* getAllKeys_1(KeySpace1*, int, int, Node1*, Node1**, int*);
-void freeByKey1(KeySpace1*, KeySpace2*, int, int, int*);
+void freeByKey1(KeySpace1*, KeySpace2*, int, int, int*, int);
 void freeKeySpace1(KeySpace1*, int);
 void freeNode(Node1*);
 void printNode(Node1*);
